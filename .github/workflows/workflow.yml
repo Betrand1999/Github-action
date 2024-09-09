@@ -8,17 +8,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: betrand1997/myapp  # Ensure this image keeps running with the intended service
-      options: --privileged     # Needed for Docker inside Docker
+      image: docker:stable-dind  # Use Docker-in-Docker image
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Start Docker service
-        run: |
-          service docker start || sudo dockerd &  # Attempt to start Docker service or daemon
-          sleep 10                               # Wait to ensure Docker daemon is fully up
-          docker --version                       # Verify Docker is running inside the container
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -27,20 +20,16 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build container
-        run: docker build -t betrand1999/test .
+        run: docker build -t betrand1997/test .
 
       - name: Tag container
-        run: docker tag betrand1999/test betrand1999/test:latest
+        run: docker tag betrand1997/test betrand1997/test:latest
 
       - name: Push container to Docker Hub
-        run: docker push betrand1999/test:latest
+        run: docker push betrand1997/test:latest
 
       - name: Run container
-        run: docker run -d -p 8080:80 betrand1999/test:latest
+        run: docker run -d -p 8080:80 betrand1997/test:latest
 
       - name: Check if container is running
         run: docker ps
-
-      - name: Inspect container logs if failing
-        if: failure()
-        run: docker logs $(docker ps -alq)  # Check logs of the last container if it's not running
