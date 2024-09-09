@@ -8,10 +8,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: betrand1997/myapp
+      image: betrand1997/myapp  # Use your custom image with Docker installed
+      options: --privileged     # Allow the container to run Docker inside Docker
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Start Docker service
+        run: |
+          service docker start
+          docker --version   # Verify Docker is running inside the container
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -20,18 +26,16 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build container
-        run: docker build -t test .
+        run: docker build -t betrand1999/test .
 
       - name: Tag container
-        run: docker tag test betrand1999/test
+        run: docker tag betrand1999/test betrand1999/test:latest
 
       - name: Push container to Docker Hub
-        run: docker push betrand1999/test
+        run: docker push betrand1999/test:latest
 
       - name: Run container
-        run: docker run -d -p 8080:80 betrand1999/test
+        run: docker run -d -p 8080:80 betrand1999/test:latest
 
       - name: Check if container is running
         run: docker ps
-
-        ###
