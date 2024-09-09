@@ -8,16 +8,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: betrand1997/myapp  # Use your custom image with Docker installed
-      options: --privileged     # Allow the container to run Docker inside Docker
+      image: betrand1997/myapp  # Ensure this image keeps running with the intended service
+      options: --privileged     # Needed for Docker inside Docker
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Start Docker service
         run: |
-          service docker start
-          docker --version   # Verify Docker is running inside the container
+          service docker start || sudo dockerd &  # Attempt to start Docker service or daemon
+          sleep 10                               # Wait to ensure Docker daemon is fully up
+          docker --version                       # Verify Docker is running inside the container
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -39,3 +40,7 @@ jobs:
 
       - name: Check if container is running
         run: docker ps
+
+      - name: Inspect container logs if failing
+        if: failure()
+        run: docker logs $(docker ps -alq)  # Check logs of the last container if it's not running
