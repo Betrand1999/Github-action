@@ -1,33 +1,50 @@
+# name: CICD BUILD AND PUSH IMAGE
+# on:
+#   push:
+#     branches:
+#       - dev
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     container:
+#       image: betrand1997/myapp
+
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v2
+
+#       - name: Print Environment Info
+#         run: uname -a
+
+#       - name: Login to Docker Hub
+#         uses: docker/login-action@v3
+#         with:
+#           username: ${{ secrets.DOCKER_USERNAME }}
+#           password: ${{ secrets.DOCKER_PASSWORD }}
+
+#       - name: Build Docker Image
+#         run: docker build -t app .
+
+#       - name: Tag Docker Image
+#         run: docker tag app betrand1997/app
+
+#       - name: Push Docker Image
+#         run: docker push betrand1997/app
+
+
 name: CICD BUILD AND PUSH IMAGE
 on:
   push:
     branches:
       - dev
-
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: betrand1997/myapp
-
+      image: betrand1997/myapp  
     steps:
-      - name: Checkout Repository
+      - name: checkout repo
         uses: actions/checkout@v2
-
-      - name: Print Environment Info
-        run: uname -a
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build Docker Image
-        run: docker build -t app .
-
-      - name: Tag Docker Image
-        run: docker tag app betrand1997/app
-
-      - name: Push Docker Image
-        run: docker push betrand1997/app
+      - name: run a command
+        run: echo "Testing workflow"
