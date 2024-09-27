@@ -41,8 +41,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: betrand1997/myapp 
+    # container:
+    #   image: betrand1997/myapp 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
