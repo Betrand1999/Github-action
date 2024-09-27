@@ -5,7 +5,7 @@ on:
      - dev
 jobs:
   build:
-   runs-on: ubuntu
+   runs-on: ubuntu-latest
    container:
     image: betrand1997/myapp  
    steps:
