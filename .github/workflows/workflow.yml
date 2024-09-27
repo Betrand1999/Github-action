@@ -10,6 +10,6 @@ jobs:
     image: betrand1997/myapp  
    steps:
      - name: checkout repo
-       run: actions/checkout@v2
+       uses: actions/checkout@v2
      - name: run a command
        run: echo "Testing workflow"
