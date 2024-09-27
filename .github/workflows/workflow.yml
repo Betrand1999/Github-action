@@ -42,7 +42,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: httpd
+      image: betrand1997/myapp 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
