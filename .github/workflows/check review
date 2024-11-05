@@ -1,29 +1,29 @@
-# check review
+# check-review for demo environment
 # This is a generated workflow and can be _overwritten_ without notice
-name: check-review
+name: check-review-demo
 
 on:
-pull_request_review:
-types: [submitted]
+  pull_request_review:
+    types: [submitted]
 
 jobs:
-check-review:
-if: github.event.review.state == 'APPROVED'
-runs-on: ubuntu-latest
+  check-review:
+    if: github.event.review.state == 'APPROVED'
+    runs-on: ubuntu-latest
 
-steps:
-- name: Checkout
-uses: actions/checkout@v4
-with:
-fetch-depth: 0
-token: ${{ secrets.GHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GHUB_TOKEN }}
 
-- name: Check review approver
-shell: bash
-env:
-EVENT_PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
-EVENT_REVIEW_USER_LOGIN: ${{ github.event.review.user.login }}
-run: |
-wget --header='Authorization: token ${{ secrets.GHUB_TOKEN }}' \
-https://raw.githubusercontent.com/McK-Internal/CDP-DevOps/main/tf/devops/ghub/wflows/scripts/creview.py
-python3 creview.py
+      - name: Check review approver
+        shell: bash
+        env:
+          EVENT_PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
+          EVENT_REVIEW_USER_LOGIN: ${{ github.event.review.user.login }}
+        run: |
+          wget --header='Authorization: token ${{ secrets.GHUB_TOKEN }}' \
+          https://raw.githubusercontent.com/Betrand1999/github-action/main/scripts/creview.py
+          python3 creview.py
