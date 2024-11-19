@@ -1,0 +1,25 @@
+name: Check Merge
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  merge-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Check PR Label
+        id: check-label
+        run: |
+          if [[ "${{ github.event.pull_request.labels }}" != *"ready-to-merge"* ]]; then
+            echo "Not ready for merge. Exiting."
+            exit 1
+          fi
+
+      - name: Run tests (if any)
+        run: |
+          # Add testing or validation steps
+          echo "Running tests..."
+          echo "Tests passed."

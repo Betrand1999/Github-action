@@ -1,0 +1,19 @@
+name: Auto Merge
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  auto-merge:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Auto Merge Action
+        uses: pascalgn/automerge-action@v0.15.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          mergeMethod: squash  # Options: merge, squash, rebase

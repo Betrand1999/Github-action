@@ -1,0 +1,17 @@
+name: Check Review
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  review-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Check for reviews
+        uses: peter-evans/review-checker@v1
+        with:
+          minimum-approvals: 2  # Change as per your policy
+          review-type: APPROVED
