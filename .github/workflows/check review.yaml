@@ -12,7 +12,19 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Check for reviews
-        uses: Betrand1999/github-action/path-to-action@version
+        uses: actions/github-script@v6
         with:
-          minimum-approvals: 2  # Modify this based on your requirements
-          review-type: APPROVED
+          script: |
+            const { data: reviews } = await github.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+            });
+
+            const approvedReviews = reviews.filter(
+              review => review.state === 'APPROVED'
+            );
+
+            if (approvedReviews.length < 2) {
+              core.setFailed(`PR requires at least 2 approvals. Found ${approvedReviews.length}.`);
+            }
