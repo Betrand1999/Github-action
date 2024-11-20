@@ -15,21 +15,34 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
+            const core = require('@actions/core');
+
+            // Check if context is available and contains the necessary PR information
             if (!context || !context.payload || !context.payload.pull_request) {
               core.setFailed('This workflow is only applicable to pull requests.');
               return;
             }
 
-            const { data: reviews } = await github.rest.pulls.listReviews({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.pull_request.number,
-            });
+            try {
+              // Fetch pull request reviews
+              const { data: reviews } = await github.rest.pulls.listReviews({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.payload.pull_request.number,
+              });
 
-            const approvedReviews = reviews.filter(
-              review => review.state === 'APPROVED'
-            );
+              // Filter to find approved reviews
+              const approvedReviews = reviews.filter(
+                review => review.state === 'APPROVED'
+              );
 
-            if (approvedReviews.length < 2) {
-              core.setFailed(`PR requires at least 2 approvals. Found ${approvedReviews.length}.`);
+              // Check if the required number of approvals is met
+              const requiredApprovals = 2;
+              if (approvedReviews.length < requiredApprovals) {
+                core.setFailed(`PR requires at least ${requiredApprovals} approvals. Found ${approvedReviews.length}.`);
+              } else {
+                core.info(`PR has met the required number of approvals: ${approvedReviews.length}`);
+              }
+            } catch (error) {
+              core.setFailed(`An error occurred while checking reviews: ${error.message}`);
             }
