@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    container:
+     image: alpine
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -17,11 +19,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Dry run Docker build (no build)
-        run: |
-          echo "Performing a dry-run (no build step). Validating the Dockerfile syntax."
-          docker build --dry-run -t betrand1997/my-app:latest .
 
       - name: Build Docker image
         run: |
