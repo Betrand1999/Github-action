@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Check for reviews
-        uses: peter-evans/review-checker@v1
+        uses: Betrand1999/github-action/path-to-action@version
         with:
           minimum-approvals: 2  # Modify this based on your requirements
           review-type: APPROVED
