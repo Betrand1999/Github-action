@@ -15,7 +15,12 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const { data: reviews } = await github.pulls.listReviews({
+            if (!context || !context.payload || !context.payload.pull_request) {
+              core.setFailed('This workflow is only applicable to pull requests.');
+              return;
+            }
+
+            const { data: reviews } = await github.rest.pulls.listReviews({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.payload.pull_request.number,
