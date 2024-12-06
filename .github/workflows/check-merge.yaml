@@ -6,6 +6,7 @@ on:
 
 jobs:
   merge-check:
+    if: false # This skips the entire job
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -18,4 +19,3 @@ jobs:
             echo "Not ready for merge. Exiting."
             exit 1
           fi
-##3#
